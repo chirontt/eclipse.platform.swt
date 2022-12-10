@@ -13,7 +13,6 @@
 @rem ***************************************************************************
 
 @rem The original build.bat source is located in /org.eclipse.swt/Eclipse SWT PI/win32/library/build.bat. It is copied during various build(s).
-@rem Typically it's not ran directly, instead it is reached by build.xml's build_libraries target found in eclipse.platform.swt\bundles\org.eclipse.swt.win32.win32.x86*
 
 @echo off
 echo
@@ -51,15 +50,33 @@ IF NOT EXIST "%MSVC_HOME%" (
 @rem Check for a usable JDK
 IF "%SWT_JAVA_HOME%"=="" CALL :ECHO "'SWT_JAVA_HOME' was not provided"
 IF NOT EXIST "%SWT_JAVA_HOME%" (
-    CALL :ECHO "WARNING: x64 Java JDK not found. Please set SWT_JAVA_HOME to the JDK directory containing the intended JDK native headers."
+    CALL :ECHO "WARNING: 64-bit Java JDK not found. Please set SWT_JAVA_HOME to the JDK directory containing the intended JDK native headers."
 )
 
 @rem -----------------------
-set PROCESSOR_ARCHITECTURE=AMD64
-IF "x.%OUTPUT_DIR%"=="x." set OUTPUT_DIR=..\..\..\org.eclipse.swt.win32.win32.x86_64
+IF NOT "%XC_HOST_TARGET%"=="" (
+  @rem Accept the already-set variable value for host_target, for manual cross-compile
+  CALL :ECHO "Manual cross-compile of host_target: %XC_HOST_TARGET%"
+  SET BUILD_ARCH=%XC_HOST_TARGET%
+  @rem With the knowledge that the OUTPUT_DIR is also already set
+  CALL :ECHO "Cross-compile output dir: %OUTPUT_DIR%"
+  IF "x.%OUTPUT_DIR%"=="x." (
+    CALL :ECHO "ERROR: OUTPUT_DIR environment variable must be set for manual cross-compile."
+    EXIT /B 1
+  )
+) ELSE IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
+  SET BUILD_ARCH=x64
+  IF "x.%OUTPUT_DIR%"=="x." SET OUTPUT_DIR=..\..\..\org.eclipse.swt.win32.win32.x86_64
+) ELSE IF "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
+  SET BUILD_ARCH=arm64
+  IF "x.%OUTPUT_DIR%"=="x." SET OUTPUT_DIR=..\..\..\org.eclipse.swt.win32.win32.aarch64
+) ELSE (
+  CALL :ECHO "ERROR: Unknown host architecture: %PROCESSOR_ARCHITECTURE%."
+  EXIT /B 1
+)
 
 set CFLAGS=-DJNI64
-call "%MSVC_HOME%\VC\Auxiliary\Build\vcvarsall.bat" x64
+call "%MSVC_HOME%\VC\Auxiliary\Build\vcvarsall.bat" %BUILD_ARCH%
 
 @rem if call to vcvarsall.bat (which sets up environment) silently fails, then provide advice to user.
 WHERE cl
