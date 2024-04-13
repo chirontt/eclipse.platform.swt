@@ -234,7 +234,8 @@ BOOL Validate_SetPreferredAppMode(const BYTE* functionPtr)
 		(functionPtr[0x06] == 0x87) && (functionPtr[0x07] == 0x0D) &&   // xchg    ecx,dword ptr [uxtheme!g_preferredAppMode]
 		(functionPtr[0x0C] == 0xC3);                                    // ret
 #elif defined(_M_ARM64)
-	if (*(const DWORD*)(&functionPtr[0x1C]) == 0x912F6100) // add x0,x8,#0xBD8
+	if (*(const DWORD*)(&functionPtr[0x1C]) == 0x912F6100 ||            // add x0,x8,#0xBD8
+		*(const DWORD*)(&functionPtr[0x1C]) == 0x912EE100)              // add x0,x8,#0xBB8 Win11 builds from 22631.3447
 	{
 		return TRUE;
 	}
