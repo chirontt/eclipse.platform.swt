@@ -234,7 +234,7 @@ BOOL Validate_SetPreferredAppMode(const BYTE* functionPtr)
 		(functionPtr[0x06] == 0x87) && (functionPtr[0x07] == 0x0D) &&   // xchg    ecx,dword ptr [uxtheme!g_preferredAppMode]
 		(functionPtr[0x0C] == 0xC3);                                    // ret
 #elif defined(_M_ARM64)
-	if (*(const DWORD*)(&functionPtr[0x1C]) == 0x912F6100) // add x0,x8,#0xBD8
+	if ((functionPtr[0x10] & 0x1F) == 0x08 && (functionPtr[0x13] & 0x90) == 0x90)  // adrp x8,wil::details::g_enabledStateManager+40h
 	{
 		return TRUE;
 	}
