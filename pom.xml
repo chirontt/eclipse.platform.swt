@@ -116,7 +116,6 @@
       <activation>
         <os>
           <family>unix</family>
-          <name>Linux</name>
         </os>
       </activation>
       <modules>
@@ -138,6 +137,11 @@
                   <os>linux</os>
                   <ws>gtk</ws>
                   <arch>ppc64le</arch>
+                </environment>
+                <environment>
+                  <os>freebsd</os>
+                  <ws>gtk</ws>
+                  <arch>x86_64</arch>
                 </environment>
               </environments>
             </configuration>
