@@ -35,6 +35,8 @@
 	<modules>
 		<module>org.eclipse.swt.cocoa.macosx.x86_64</module>
 		<module>org.eclipse.swt.cocoa.macosx.aarch64</module>
+		<module>org.eclipse.swt.gtk.freebsd.aarch64</module>
+		<module>org.eclipse.swt.gtk.freebsd.x86_64</module>
 		<module>org.eclipse.swt.gtk.linux.aarch64</module>
 		<module>org.eclipse.swt.gtk.linux.ppc64le</module>
 		<module>org.eclipse.swt.gtk.linux.x86_64</module>
