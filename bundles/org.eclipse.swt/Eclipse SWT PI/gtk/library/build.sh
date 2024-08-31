@@ -1,6 +1,6 @@
 #!/bin/sh
 #*******************************************************************************
-# Copyright (c) 2000, 2020 IBM Corporation and others.
+# Copyright (c) 2000, 2024 IBM Corporation and others.
 #
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -81,27 +81,38 @@ if [ "${OS}" = "" ]; then
 	OS=`uname -s`
 fi
 case $OS in
+	"FreeBSD" | "freebsd")
+		SWT_OS=`uname -s | tr '[:upper:]' '[:lower:]'`
+		MAKE_TYPE=gmake
+		MAKEFILE=make_unix.mak
+		export FREEBSD_OS=1
+		;;
 	*)
 		SWT_OS=`uname -s | tr -s '[:upper:]' '[:lower:]'`
-		MAKEFILE=make_linux.mak
+		MAKEFILE=make_unix.mak
 		;;
 esac
 
 # Determine which CPU type we are building for
-if [ "${MODEL}" = "" ]; then
-	if uname -i > /dev/null 2>&1; then
-		MODEL=`uname -i`
-		if [ ${MODEL} = 'unknown' ]; then
-		  MODEL=`uname -m`
-		fi
-	else
-		MODEL=`uname -m`
-	fi
-fi
+MODEL=`uname -m`
 case $MODEL in
-	"x86_64")
+	"x86_64" | "amd64")
 		SWT_ARCH=x86_64
 		AWT_ARCH=amd64
+		;;
+	"aarch64" | "arm64")
+		SWT_ARCH=aarch64
+		AWT_ARCH=aarch64
+		;;
+	"powerpc" | "powerpc64")
+		SWT_ARCH=ppc64
+		AWT_ARCH=ppc64
+		MODEL=`uname -p`
+		;;
+	"powerpc64le")
+		SWT_ARCH=ppc64le
+		AWT_ARCH=ppc64le
+		MODEL=`uname -p`
 		;;
 	*)
 		SWT_ARCH=$MODEL
@@ -141,11 +152,39 @@ case $SWT_OS.$SWT_ARCH in
 		if [ "${PKG_CONFIG_PATH}" = "" ]; then
 			export PKG_CONFIG_PATH="/usr/lib64/pkgconfig/"
 		fi
+		;;
+	"freebsd.x86_64")
+		AWT_ARCH=x86_64
+		if [ "${CC}" = "" ]; then
+			export CC=cc
+		fi
+		if [ "${PKG_CONFIG_PATH}" = "" ]; then
+			export PKG_CONFIG_PATH="/usr/lib64/pkgconfig"
+		fi
+		;;
+	"freebsd.ppc64" | "freebsd.ppc64le")
+		if [ "${CC}" = "" ]; then
+			export CC=cc
+		fi
+		if [ "${PKG_CONFIG_PATH}" = "" ]; then
+			export PKG_CONFIG_PATH="/usr/lib64/pkgconfig/"
+		fi
+		export GTK_VERSION=3.0
+		;;
+	"freebsd.aarch64")
+		if [ "${CC}" = "" ]; then
+			export CC=cc
+		fi
+		if [ "${PKG_CONFIG_PATH}" = "" ]; then
+			export PKG_CONFIG_PATH="/usr/lib64/pkgconfig/"
+		fi
+		export GTK_VERSION=3.0
+		;;
 esac
 
 
 # For 64-bit CPUs, we have a switch
-if [ ${MODEL} = 'x86_64' -o ${MODEL} = 'ppc64le' -o ${MODEL} = 'aarch64' -o ${MODEL} = 'loongarch64' -o ${MODEL} = 'riscv64' ]; then
+if [ ${MODEL} = 'x86_64' -o ${MODEL} = 'ppc64' -o ${MODEL} = 'ppc64le' -o ${MODEL} = 'powerpc64' -o ${MODEL} = 'powerpc64le' -o ${MODEL} = 'aarch64' -o ${MODEL} = 'arm64' -o ${MODEL} = 'loongarch64' -o ${MODEL} = 'riscv64' ]; then
 	SWT_PTR_CFLAGS=-DJNI64
 	if [ -d /lib64 ]; then
 		XLIB64=-L/usr/X11R6/lib64
@@ -156,6 +195,11 @@ if [ ${MODEL} = 'x86_64' -o ${MODEL} = 'ppc64le' -o ${MODEL} = 'aarch64' -o ${MO
 		XLIB64="${XLIB64} -L/usr/lib64"
 		SWT_LFLAGS=-m64
 		export SWT_LFLAGS
+	fi
+	if [ ${SWT_OS} = "freebsd" ]
+	then
+		SWT_PTR_CFLAGS="${SWT_PTR_CFLAGS} -m64"
+		export SWT_LFLAGS=-m64
 	fi
 	export SWT_PTR_CFLAGS
 fi
