@@ -9,6 +9,7 @@
   Contributors:
      Igor Fedorenko - initial implementation
      Conrad Groth - add platform specific JUnit test bundles
+     Tue Ton - support for FreeBSD
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -84,7 +85,6 @@
       <activation>
         <os>
           <family>unix</family>
-          <name>Linux</name>
         </os>
       </activation>
       <modules>
