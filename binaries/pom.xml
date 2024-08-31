@@ -9,6 +9,7 @@
 #
 # Contributors:
 #     Hannes Wellmann - initial API and implementation
+#     Tue Ton - support for FreeBSD
 ###############################################################################
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -34,6 +35,8 @@
 	<modules>
 		<module>org.eclipse.swt.cocoa.macosx.x86_64</module>
 		<module>org.eclipse.swt.cocoa.macosx.aarch64</module>
+		<module>org.eclipse.swt.gtk.freebsd.aarch64</module>
+		<module>org.eclipse.swt.gtk.freebsd.x86_64</module>
 		<module>org.eclipse.swt.gtk.linux.aarch64</module>
 		<module>org.eclipse.swt.gtk.linux.ppc64le</module>
 		<module>org.eclipse.swt.gtk.linux.riscv64</module>
