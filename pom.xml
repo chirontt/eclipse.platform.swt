@@ -121,8 +121,7 @@
       <activation>
         <os>
           <family>unix</family>
-          <name>Linux</name>
-	</os>
+        </os>
       </activation>
 	  <modules>
 	    <module>tests/org.eclipse.swt.tests.gtk</module>
@@ -135,21 +134,26 @@
 	          <version>${tycho.version}</version>
 	          <configuration>
 	            <environments>
-	            	<environment>
-						<os>linux</os>
-						<ws>gtk</ws>
-						<arch>x86_64</arch>
-					</environment>
-					<environment>
-			            <os>linux</os>
-			            <ws>gtk</ws>
-			            <arch>ppc64le</arch>
-			          </environment>
-	            	</environments>
+	              <environment>
+	                <os>linux</os>
+	                <ws>gtk</ws>
+	                <arch>x86_64</arch>
+	              </environment>
+	              <environment>
+	                <os>linux</os>
+	                <ws>gtk</ws>
+	                <arch>ppc64le</arch>
+	              </environment>
+	              <environment>
+	                <os>freebsd</os>
+	                <ws>gtk</ws>
+	                <arch>x86_64</arch>
+	              </environment>
+	            </environments>
 	          </configuration>
 	        </plugin>
 	      </plugins>
-      </build>
+	  </build>
     </profile>
     <profile>
       <id>windows</id>

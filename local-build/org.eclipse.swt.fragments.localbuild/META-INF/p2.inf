@@ -28,3 +28,13 @@ requires.6.namespace = org.eclipse.equinox.p2.iu
 requires.6.name = org.eclipse.swt.cocoa.macosx.aarch64
 requires.6.range = 0.0.0
 requires.6.filter = (&(osgi.os=macosx)(osgi.ws=cocoa)(osgi.arch=aarch64))
+
+requires.8.namespace = org.eclipse.equinox.p2.iu
+requires.8.name = org.eclipse.swt.gtk.freebsd.x86_64
+requires.8.range = 0.0.0
+requires.8.filter = (&(osgi.os=freebsd)(osgi.ws=gtk)(osgi.arch=x86_64)(!(org.eclipse.swt.buildtime=true)))
+
+requires.9.namespace = org.eclipse.equinox.p2.iu
+requires.9.name = org.eclipse.swt.gtk.freebsd.aarch64
+requires.9.range = 0.0.0
+requires.9.filter = (&(osgi.os=freebsd)(osgi.ws=gtk)(osgi.arch=aarch64)(!(org.eclipse.swt.buildtime=true)))

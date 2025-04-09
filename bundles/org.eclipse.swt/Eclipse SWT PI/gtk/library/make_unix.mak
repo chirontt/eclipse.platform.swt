@@ -12,7 +12,7 @@
 #     IBM Corporation - initial API and implementation
 #*******************************************************************************
 
-# Makefile for creating SWT libraries for Linux GTK
+# Makefile for creating SWT libraries for Linux & FreeBSD GTK
 
 # assumes these variables are set in the environment from which make is run
 #	SWT_JAVA_HOME
@@ -103,11 +103,24 @@ CFLAGS := $(CFLAGS) \
 		-DSWT_VERSION=$(SWT_VERSION) \
 		$(SWT_DEBUG) \
 		$(SWT_WEBKIT_DEBUG) \
-		-DLINUX -DGTK \
+		-DGTK \
 		-I$(SWT_JAVA_HOME)/include \
-		-I$(SWT_JAVA_HOME)/include/linux \
 		${SWT_PTR_CFLAGS}
 LFLAGS = -shared -fPIC ${SWT_LFLAGS}
+
+ifdef FREEBSD_OS
+freebsd_prefix=`pkg-config --variable=prefix gtk+-3.0`
+CFLAGS := $(CFLAGS) \
+		-DFREEBSD \
+		-Wno-deprecated-non-prototype \
+		-I$(freebsd_prefix)/include \
+		-I$(SWT_JAVA_HOME)/include/freebsd
+LFLAGS := $(LFLAGS) -L$(freebsd_prefix)/lib
+else
+CFLAGS := $(CFLAGS) \
+		-DLINUX \
+		-I$(SWT_JAVA_HOME)/include/linux
+endif
 
 # Treat all warnings as errors. If your new code produces a warning, please
 # take time to properly understand and fix/silence it as necessary.
